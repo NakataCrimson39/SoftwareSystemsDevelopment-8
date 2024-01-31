@@ -17,20 +17,17 @@ function App() {
 }
 function TodoListCard() {
     const [items, setItems] = React.useState(null);
-
     React.useEffect(() => {
         fetch('/items')
             .then(r => r.json())
             .then(setItems);
     }, []);
-
     const onNewItem = React.useCallback(
         newItem => {
             setItems([...items, newItem]);
         },
         [items],
     );
-
     const onItemUpdate = React.useCallback(
         item => {
             const index = items.findIndex(i => i.id === item.id);
@@ -42,7 +39,6 @@ function TodoListCard() {
         },
         [items],
     );
-
     const onItemRemoval = React.useCallback(
         item => {
             const index = items.findIndex(i => i.id === item.id);
@@ -50,9 +46,7 @@ function TodoListCard() {
         },
         [items],
     );
-
     if (items === null) return 'Loading...';
-
     return (
         <React.Fragment>
             <AddItemForm onNewItem={onNewItem} />
@@ -70,13 +64,10 @@ function TodoListCard() {
         </React.Fragment>
     );
 }
-
 function AddItemForm({ onNewItem }) {
     const { Form, InputGroup, Button } = ReactBootstrap;
-
     const [newItem, setNewItem] = React.useState('');
     const [submitting, setSubmitting] = React.useState(false);
-
     const submitNewItem = e => {
         e.preventDefault();
         setSubmitting(true);
@@ -92,7 +83,6 @@ function AddItemForm({ onNewItem }) {
                 setNewItem('');
             });
     };
-
     return (
         <Form onSubmit={submitNewItem}>
             <InputGroup className="mb-3">
@@ -117,10 +107,8 @@ function AddItemForm({ onNewItem }) {
         </Form>
     );
 }
-
 function ItemDisplay({ item, onItemUpdate, onItemRemoval }) {
     const { Container, Row, Col, Button } = ReactBootstrap;
-
     const toggleCompletion = () => {
         fetch(`/items/${item.id}`, {
             method: 'PUT',
@@ -133,13 +121,11 @@ function ItemDisplay({ item, onItemUpdate, onItemRemoval }) {
             .then(r => r.json())
             .then(onItemUpdate);
     };
-
     const removeItem = () => {
         fetch(`/items/${item.id}`, { method: 'DELETE' }).then(() =>
             onItemRemoval(item),
         );
     };
-
     return (
         <Container fluid className={`item ${item.completed && 'completed'}`}>
             <Row>
@@ -180,5 +166,4 @@ function ItemDisplay({ item, onItemUpdate, onItemRemoval }) {
         </Container>
     );
 }
-
 ReactDOM.render(<App />, document.getElementById('root'));
