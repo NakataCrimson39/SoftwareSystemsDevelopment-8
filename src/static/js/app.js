@@ -2,15 +2,19 @@ function App() {
     const { Container, Row, Col } = ReactBootstrap;
     return (
         <Container>
-            <Row>
-                <Col md={{ offset: 3, span: 6 }}>
+            <Row className="justify-content-md-center">
+                <Col md={{ span: 6 }}>
+                    <h1 className="text-center">ToDo App by MikuNakata</h1> {/* タイトルを追加 */}
+                </Col>
+            </Row>
+            <Row className="justify-content-md-center">
+                <Col md={{ span: 6 }}>
                     <TodoListCard />
                 </Col>
             </Row>
         </Container>
     );
 }
-
 function TodoListCard() {
     const [items, setItems] = React.useState(null);
 
