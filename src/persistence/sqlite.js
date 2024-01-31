@@ -1,22 +1,17 @@
 const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
 const location = process.env.SQLITE_DB_LOCATION || '/etc/todos/todo.db';
-
 let db, dbAll, dbRun;
-
 function init() {
     const dirName = require('path').dirname(location);
     if (!fs.existsSync(dirName)) {
         fs.mkdirSync(dirName, { recursive: true });
     }
-
     return new Promise((acc, rej) => {
         db = new sqlite3.Database(location, err => {
             if (err) return rej(err);
-
             if (process.env.NODE_ENV !== 'test')
                 console.log(`Using sqlite database at ${location}`);
-
             db.run(
                 'CREATE TABLE IF NOT EXISTS todo_items (id varchar(36), name varchar(255), completed boolean)',
                 (err, result) => {
@@ -27,7 +22,6 @@ function init() {
         });
     });
 }
-
 async function teardown() {
     return new Promise((acc, rej) => {
         db.close(err => {
@@ -36,7 +30,6 @@ async function teardown() {
         });
     });
 }
-
 async function getItems() {
     return new Promise((acc, rej) => {
         db.all('SELECT * FROM todo_items', (err, rows) => {
@@ -44,14 +37,13 @@ async function getItems() {
             acc(
                 rows.map(item =>
                     Object.assign({}, item, {
-                        completed: item.complated === 1,
+                        completed: item.completed === 1,
                     }),
                 ),
             );
         });
     });
 }
-
 async function getItem(id) {
     return new Promise((acc, rej) => {
         db.all('SELECT * FROM todo_items WHERE id=?', [id], (err, rows) => {
@@ -66,7 +58,6 @@ async function getItem(id) {
         });
     });
 }
-
 async function storeItem(item) {
     return new Promise((acc, rej) => {
         db.run(
@@ -79,7 +70,6 @@ async function storeItem(item) {
         );
     });
 }
-
 async function updateItem(id, item) {
     return new Promise((acc, rej) => {
         db.run(
@@ -91,8 +81,7 @@ async function updateItem(id, item) {
             },
         );
     });
-} 
-
+}
 async function removeItem(id) {
     return new Promise((acc, rej) => {
         db.run('DELETE FROM todo_items WHERE id = ?', [id], err => {
@@ -101,7 +90,6 @@ async function removeItem(id) {
         });
     });
 }
-
 module.exports = {
     init,
     teardown,
